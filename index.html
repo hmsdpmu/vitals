@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- HDMP VITALS 2.0 Field App — Version 0.1.0 (27 November 2026) — Phase 2, Task 3 -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#06264D">
+<meta name="description" content="Offline hospital visit tool of the Hospital Development and Management Program, Provincial Government of Palawan.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="VITALS">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>HDMP VITALS 2.0 Field App</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+  :root {
+    --blue: #0B3A75; --navy: #06264D; --teal: #1A9A9A; --mist: #DCEAF5; --ice: #F0F6FA;
+    --charcoal: #1D2939; --slate: #475467; --muted: #667085; --silver: #D0D5DD; --soft: #EAECF0;
+    --cloud: #F2F4F7; --porcelain: #F8FAFC; --white: #FFFFFF;
+    --ok: #287A5B; --attention: #B7791F; --critical: #B42318; --info: #0B3A75; --progress: #1A9A9A; --na: #667085;
+    --head: 'Montserrat', Arial, sans-serif; --body: 'Source Sans 3', Arial, sans-serif;
+    --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--porcelain); color: var(--charcoal);
+    font-family: var(--body); font-size: 16px; line-height: 1.4; -webkit-text-size-adjust: 100%; }
+  header.bar { position: sticky; top: 0; z-index: 10; background: var(--navy); color: var(--white);
+    padding: calc(10px + var(--safe-top)) 16px 10px; display: flex; align-items: center; gap: 12px; }
+  header.bar img { width: 34px; height: 34px; border-radius: 8px; }
+  header.bar .title { flex: 1; min-width: 0; }
+  header.bar .title b { display: block; font-family: var(--head); font-weight: 700; font-size: 17px; letter-spacing: .2px; }
+  header.bar .title span { display: block; font-size: 12.5px; color: var(--mist); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pill { font-family: var(--head); font-weight: 600; font-size: 12px; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+  .pill.online { background: var(--ok); color: var(--white); }
+  .pill.offline { background: var(--attention); color: var(--white); }
+  main { max-width: 860px; margin: 0 auto; padding: 16px 16px calc(96px + var(--safe-bottom)); }
+  h1 { font-family: var(--head); font-weight: 700; font-size: 22px; color: var(--blue); margin: 4px 0 12px; }
+  h2 { font-family: var(--head); font-weight: 600; font-size: 16px; color: var(--navy); margin: 0 0 10px; }
+  p { margin: 0 0 10px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 14px; }
+  .card { background: var(--white); border: 1px solid var(--soft); border-radius: 12px; padding: 16px; margin: 0 0 14px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .04); }
+  .card.mist { background: var(--mist); border-color: var(--mist); }
+  .card.ice { background: var(--ice); border-color: var(--ice); }
+  .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .grow { flex: 1; min-width: 0; }
+  .check { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-top: 1px solid var(--cloud); }
+  .check:first-of-type { border-top: 0; }
+  .sym { font-family: var(--head); font-weight: 700; width: 22px; text-align: center; flex: none; }
+  .s-ok { color: var(--ok); } .s-att { color: var(--attention); } .s-crit { color: var(--critical); }
+  .s-prog { color: var(--progress); } .s-na { color: var(--na); }
+  .status-label { font-family: var(--head); font-weight: 600; font-size: 13px; }
+  button, .btn { font-family: var(--head); font-weight: 600; font-size: 15px; border-radius: 10px; border: 1px solid var(--blue);
+    background: var(--blue); color: var(--white); padding: 11px 16px; cursor: pointer; min-height: 44px; }
+  button.secondary { background: var(--white); color: var(--blue); }
+  button.danger { background: var(--white); color: var(--critical); border-color: var(--critical); }
+  button.link { background: none; border: 0; color: var(--blue); padding: 6px 0; min-height: 0; text-decoration: underline; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  label { display: block; font-family: var(--head); font-weight: 600; font-size: 14px; color: var(--navy); margin: 12px 0 4px; }
+  input { width: 100%; font-family: var(--body); font-size: 16px; padding: 11px 12px; border: 1px solid var(--silver);
+    border-radius: 10px; background: var(--white); color: var(--charcoal); }
+  input:focus { outline: 2px solid var(--teal); border-color: var(--teal); }
+  .hint { font-size: 13.5px; color: var(--muted); margin-top: 4px; }
+  .msg { border-radius: 10px; padding: 10px 12px; margin: 12px 0 0; font-size: 15px; }
+  .msg.ok { background: #E8F3EE; color: var(--ok); }
+  .msg.err { background: #FBEAE8; color: var(--critical); }
+  .msg.info { background: var(--mist); color: var(--navy); }
+  .hosp { display: flex; gap: 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--cloud); }
+  .hosp:first-child { border-top: 0; }
+  .hosp .name { font-weight: 600; }
+  .tag { display: inline-block; font-family: var(--head); font-weight: 600; font-size: 11.5px; padding: 2px 8px;
+    border-radius: 6px; background: var(--cloud); color: var(--slate); margin-right: 6px; }
+  .ready { color: var(--ok); font-size: 14px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 8px; }
+  .kpi { background: var(--ice); border-radius: 10px; padding: 10px; }
+  .kpi b { display: block; font-family: var(--head); font-weight: 700; font-size: 20px; color: var(--blue); }
+  .kpi span { font-size: 13px; color: var(--slate); }
+  nav.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: var(--white); border-top: 1px solid var(--soft);
+    display: flex; padding-bottom: var(--safe-bottom); }
+  nav.tabs a { flex: 1; text-align: center; padding: 10px 4px 12px; color: var(--muted); text-decoration: none;
+    font-family: var(--head); font-weight: 600; font-size: 12.5px; }
+  nav.tabs a.on { color: var(--blue); box-shadow: inset 0 3px 0 var(--blue); }
+  nav.tabs a .ico { display: block; font-size: 20px; line-height: 1.1; }
+  .banner { background: var(--teal); color: var(--white); padding: 10px 16px; display: none; align-items: center; gap: 12px; }
+  .banner.show { display: flex; }
+  .banner button { background: var(--white); color: var(--navy); border-color: var(--white); padding: 6px 12px; min-height: 36px; }
+  .hidden { display: none !important; }
+  footer.foot { text-align: center; color: var(--muted); font-size: 12.5px; margin-top: 18px; }
+  @media (min-width: 720px) { main { padding-top: 24px; } h1 { font-size: 24px; } }
+</style>
+</head>
+<body>
+  <header class="bar">
+    <img src="icon-192.png" alt="">
+    <div class="title">
+      <b>VITALS 2.0</b>
+      <span id="who">Hospital Development and Management Program</span>
+    </div>
+    <span id="net" class="pill online">Online</span>
+  </header>
+  <div id="updateBanner" class="banner" role="status">
+    <span class="grow">A new version of the app is ready.</span>
+    <button id="updateBtn" type="button">Update now</button>
+  </div>
+  <main id="view" aria-live="polite"></main>
+  <nav class="tabs" aria-label="Main">
+    <a href="#home" data-tab="home"><span class="ico" aria-hidden="true">⌂</span>Home</a>
+    <a href="#packs" data-tab="packs"><span class="ico" aria-hidden="true">⇩</span>Hospitals</a>
+    <a href="#setup" data-tab="setup"><span class="ico" aria-hidden="true">⚙</span>Setup</a>
+    <a href="#about" data-tab="about"><span class="ico" aria-hidden="true">ⓘ</span>About</a>
+  </nav>
+  <noscript><p style="padding:16px">This app needs JavaScript turned on.</p></noscript>
+  <script src="app.js"></script>
+</body>
+</html>

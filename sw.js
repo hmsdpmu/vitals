@@ -1,10 +1,10 @@
 /*
  * HDMP VITALS 2.0 Field App — offline worker
- * Version 0.1.0 (27 November 2026) — Phase 2, Task 3
+ * Version 0.2.0 (28 November 2026) — Phase 2, Task 4 (no change to how the worker works; new version so devices pick up the new app)
  * Keeps the app's own files on the device so it opens with no internet.
  * Never stores sync service replies: hospital data lives in the app's database only.
  */
-const APP_VERSION = '0.1.0';
+const APP_VERSION = '0.2.0';
 const SHELL_CACHE = 'vitals2-shell-' + APP_VERSION;
 const FONT_CACHE = 'vitals2-fonts';
 const SHELL_FILES = [
